@@ -4,10 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Interaction/EnemyInterface.h"
 #include "MVEnemy.generated.h"
 
 UCLASS()
-class METROIDVANIA_API AMVEnemy : public ACharacter
+class METROIDVANIA_API AMVEnemy : public ACharacter, public IEnemyInterface
 {
 	GENERATED_BODY()
 
@@ -15,15 +16,9 @@ public:
 	// Sets default values for this character's properties
 	AMVEnemy();
 
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	UFUNCTION(BlueprintCallable)
+	virtual void HighlightActor() override;
+	UFUNCTION(BlueprintCallable)
+	virtual void UnHighlightActor() override;
 
 };

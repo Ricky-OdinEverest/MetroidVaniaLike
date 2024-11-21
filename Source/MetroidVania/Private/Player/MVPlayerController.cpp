@@ -17,7 +17,7 @@ AMVPlayerController::AMVPlayerController()
 void AMVPlayerController::PlayerTick(float DeltaTime)
 {
 	Super::PlayerTick(DeltaTime);
-
+	EyeBallTrace();
 
 }
 
@@ -84,6 +84,74 @@ void AMVPlayerController::UpdateDirection(float MoveDirection)
 			if (CurrentRotation.Yaw != 0.0f)
 			{
 				SetControlRotation(FRotator(CurrentRotation.Pitch, 0.0f, CurrentRotation.Roll));
+			}
+		}
+	}
+}
+
+void AMVPlayerController::EyeBallTrace()
+{
+	APawn* ControlledPawn = GetPawn();
+	if (!ControlledPawn) return;
+	
+	FHitResult SightHit;
+
+	FVector Start = ControlledPawn->GetActorLocation();
+	FVector ForwardVector = ControlledPawn->GetActorForwardVector();
+
+	FVector End = Start + ForwardVector * 1000.0f;
+
+	FCollisionQueryParams QueryParams;
+	QueryParams.AddIgnoredActor(ControlledPawn);
+	
+	GetWorld()->LineTraceSingleByChannel(SightHit, Start, End, ECC_Visibility, QueryParams);
+	
+	if (!SightHit.bBlockingHit) return;
+	LastActor = ThisActor;
+	ThisActor = SightHit.GetActor();
+	/**
+	 * Line trace from Eye. There are several scenarios:
+	 *  A. LastActor is null && ThisActor is null
+	 *		- Do nothing
+	 *	B. LastActor is null && ThisActor is valid
+	 *		- Highlight ThisActor
+	 *	C. LastActor is valid && ThisActor is null
+	 *		- UnHighlight LastActor
+	 *	D. Both actors are valid, but LastActor != ThisActor
+	 *		- UnHighlight LastActor, and Highlight ThisActor
+	 *	E. Both actors are valid, and are the same actor
+	 *		- Do nothing
+	 */
+	if (LastActor == nullptr)
+	{
+		if (ThisActor != nullptr)
+		{
+			// Case B
+			ThisActor->HighlightActor();
+		}
+		else
+		{
+			// Case A - both are null, do nothing
+		}
+	}
+	else // LastActor is valid
+	{
+		if (ThisActor == nullptr)
+		{
+			// Case C
+			LastActor->UnHighlightActor();
+		}
+		else // both actors are valid
+		{
+			if (LastActor != ThisActor)
+			{
+				// Case D
+				LastActor->UnHighlightActor();
+				ThisActor->HighlightActor();
+			}
+			else
+			{
+				// Case E - do nothing
 			}
 		}
 	}

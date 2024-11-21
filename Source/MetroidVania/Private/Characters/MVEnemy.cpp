@@ -3,32 +3,32 @@
 
 #include "Characters/MVEnemy.h"
 
+#include "MetroidVania/MetroidVania.h"
+
 // Sets default values
 AMVEnemy::AMVEnemy()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
+	GetMesh()->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
 
 }
 
-// Called when the game starts or when spawned
-void AMVEnemy::BeginPlay()
+void AMVEnemy::HighlightActor()
 {
-	Super::BeginPlay();
-	
+	//GetMesh()->SetRenderCustomDepth(true);
+	GetMesh()->SetCustomDepthStencilValue(CUSTOM_DEPTH_RED);
+	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, "HighlightActor");
+	//Weapon->SetRenderCustomDepth(true);
+	//Weapon->SetCustomDepthStencilValue(CUSTOM_DEPTH_RED);
+
+	///GetMesh()->GetSocketBoneName("WeaponHandSocket")SetRenderCustomDepth(true);
 }
 
-// Called every frame
-void AMVEnemy::Tick(float DeltaTime)
+void AMVEnemy::UnHighlightActor()
 {
-	Super::Tick(DeltaTime);
-
+	GetMesh()->SetCustomDepthStencilValue(CUSTOM_DEPTH_WHITE);
+	//GetMesh()->SetRenderCustomDepth(false);
+	//Weapon->SetRenderCustomDepth(false);
+	//GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, "UNHighlightActor");
 }
-
-// Called to bind functionality to input
-void AMVEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-}
-

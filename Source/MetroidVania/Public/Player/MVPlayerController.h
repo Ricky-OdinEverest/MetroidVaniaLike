@@ -47,5 +47,7 @@ private:
 	void Attack(const FInputActionValue& InputActionValue);
 	void UpdateDirection(float MoveDirection);
 	
-
+	void EyeBallTrace();
+	TScriptInterface<IEnemyInterface> LastActor;
+	TScriptInterface<IEnemyInterface> ThisActor;
 };
