@@ -4,12 +4,15 @@
 #include "Characters/Protagonist.h"
 
 
-
+UAbilitySystemComponent* AProtagonist::GetAbilitySystemComponent() const
+{
+	return AbilitySystemComponent;
+}
 
 // Sets default values
 AProtagonist::AProtagonist()
 {
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+
 	PrimaryActorTick.bCanEverTick = true;
 
 	SpringArm = CreateDefaultSubobject<USpringArmComponent>("Spring Arm");
@@ -17,14 +20,6 @@ AProtagonist::AProtagonist()
 
 	Camera = CreateDefaultSubobject<UCameraComponent>("Camera");
 	Camera->SetupAttachment(SpringArm);
-
-	// The Following is set in blueprint
-	// Ensure the character uses the controller's yaw rotation
-	//bUseControllerRotationYaw = true;
-
-	// Disable character movement component's orientation to movement
-	//GetCharacterMovement()->bOrientRotationToMovement = false;
-
 }
 
 // Called when the game starts or when spawned
